@@ -30,7 +30,7 @@ def determineSignType(contour, image):
     cv2.imshow("Estimated Contours", cv2.drawContours(image.copy(), [estimateCont], -1, (0,0,255), 5))
     sides = len(estimateCont)
     print("Simplified Contour Points: " + str(estimateCont))
-    print("Amount of sides:" + str(sides))
+    print("Amount of sides: " + str(sides))
 
     # draws the minimum area rectangle of the sign
     rect = cv2.minAreaRect(contour)
@@ -50,11 +50,14 @@ def determineSignType(contour, image):
     cv2.imshow("Bounding box and best fit comparison", newImg)
     cv2.waitKey(0)
 
-    # returns sign type based on number of sides
+    # returns sign type based on number of sides and rotation
     if sides == 3:
         return "yield"
     elif sides == 4:
-        return "Regulatory"
+        if rotated:
+            return "Construction/maintenance"
+        else:
+            return "Regulatory"
     elif sides == 5:
         return "Crossing"
     elif sides == 8:
@@ -72,7 +75,7 @@ def determineSignColor(contour, image):
 
     # generates a mask containing the contoured sign
     blank = np.zeros((image.shape[:2]), dtype = np.uint8)
-    # this is where filling the contours would go
+    cv2.fillConvexPoly(blank, contour, color=(255,255,255))
 
     # shows the cropped image
     maskImage = cv2.bitwise_and(image, image, mask = blank)
@@ -95,6 +98,7 @@ def determineSignColor(contour, image):
 
     plt.show()
     cv2.waitKey(0)
+
 
 
 def main():
@@ -130,7 +134,7 @@ def main():
     maxArea = 0
     bestIndex = -1
     for i in range(len(contours)):
-        if maxArea < cv2.contourArea(contours[i]):
+         if maxArea < cv2.contourArea(contours[i]):
             maxArea = cv2.contourArea(contours[i])
             bestIndex = i
 
@@ -140,9 +144,9 @@ def main():
     cv2.imshow("Correct contour", newImg)
     cv2.waitKey(0)
 
+    # returns the sign type from number of sides and generates color histogram
     print("Sign type: " + determineSignType(contours[bestIndex], image.copy()))
     determineSignColor(contours[bestIndex], image.copy())
-
 
 
 main()
