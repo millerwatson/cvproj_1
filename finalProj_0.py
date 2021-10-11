@@ -28,7 +28,18 @@ def determineSignType(contour, image):
     print("Simplified Contour Points: " + str(estimateCont))
     print("Amount of sides:" + str(sides))
 
-    return "Testing statement"
+    # returns sign type based on number of sides
+
+    if sides == 3:
+        return "yield"
+    elif sides == 4:
+        return "Regulatory"
+    elif sides == 5:
+        return "Crossing"
+    elif sides == 8:
+        return "Stop"
+    else:
+        return "Unclear sign or irregular sign"
 
 
 def main():
