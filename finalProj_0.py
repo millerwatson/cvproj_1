@@ -12,6 +12,24 @@ from matplotlib import pyplot as plt
    Date: 10/1/21"""
 
 
+def determineSignType(contour, image):
+    """Purpose: to determine the street sign type of a given contour and draw intermediate stages
+    Parameters: contour: the contour to be analyzed, image: the image that the contour comes from
+    Return: the type of street sign the contour could be"""
+
+    # new image for modifying
+    newImg = image.copy()
+
+    # smoothens the contour, then estimates the amount of sides
+    epsilon = 0.02 * cv2.arcLength(contour, True)
+    estimateCont = cv2.approxPolyDP(contour, epsilon, True)
+    cv2.imshow("Estimated Contours", cv2.drawContours(image.copy(), [estimateCont], -1, (0,0,255), 5))
+    sides = len(estimateCont)
+    print("Simplified Contour Points: " + str(estimateCont))
+    print("Amount of sides:" + str(sides))
+
+    return "Testing statement"
+
 
 def main():
 
@@ -55,6 +73,8 @@ def main():
     cv2.drawContours(newImg, contours, bestIndex, (0,0,255), 3)
     cv2.imshow("Correct contour", newImg)
     cv2.waitKey(0)
+
+    print("Sign type: " + determineSignType(contours[bestIndex], image.copy()))
 
 
 
