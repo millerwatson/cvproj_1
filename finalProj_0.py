@@ -63,6 +63,40 @@ def determineSignType(contour, image):
         return "Unclear sign or irregular sign"
 
 
+def determineSignColor(contour, image):
+    """Purpose: to obtain the color of a sign and generate a histogram for the
+    user to determine the color of the sign
+    Parameters: image: the image the contour was originally taken from
+                contour: the contour of the sign
+    Output: a histogram containing the color of the sign"""
+
+    # generates a mask containing the contoured sign
+    blank = np.zeros((image.shape[:2]), dtype = np.uint8)
+    # this is where filling the contours would go
+
+    # shows the cropped image
+    maskImage = cv2.bitwise_and(image, image, mask = blank)
+    cv2.imshow("Masked Image", cv2.bitwise_and(image, image, mask = blank))
+    cv2.waitKey(0)
+
+    # putting parameters into the histogram
+    chans = cv2.split(image)
+    colors = ("b", "g", "r")
+    plt.figure()
+    plt.title("Color Histogram")
+    plt.xlabel("Bins")
+    plt.ylabel("# of Pixels")
+
+    # displaying histogram
+    for (chan, color) in zip(chans, colors):
+        hist = cv2.calcHist([chan], [0], blank, [256], [0, 256])
+        plt.plot(hist, color = color)
+        plt.xlim([0, 256])
+
+    plt.show()
+    cv2.waitKey(0)
+
+
 def main():
 
 
@@ -107,6 +141,7 @@ def main():
     cv2.waitKey(0)
 
     print("Sign type: " + determineSignType(contours[bestIndex], image.copy()))
+    determineSignColor(contours[bestIndex], image.copy())
 
 
 
