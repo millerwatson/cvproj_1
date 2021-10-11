@@ -20,6 +20,10 @@ def determineSignType(contour, image):
     # new image for modifying
     newImg = image.copy()
 
+    # generates a bounding rectangle, to compare to the contour area
+    (x, y, width, height) = cv2.boundingRect(contour)
+    cv2.rectangle(newImg,(x,y),(x+width,y+height),(0,255,0),2)
+
     # smoothens the contour, then estimates the amount of sides
     epsilon = 0.02 * cv2.arcLength(contour, True)
     estimateCont = cv2.approxPolyDP(contour, epsilon, True)
@@ -28,8 +32,25 @@ def determineSignType(contour, image):
     print("Simplified Contour Points: " + str(estimateCont))
     print("Amount of sides:" + str(sides))
 
-    # returns sign type based on number of sides
+    # draws the minimum area rectangle of the sign
+    rect = cv2.minAreaRect(contour)
+    box = cv2.boxPoints(rect)
+    box = np.int0(box)
+    cv2.drawContours(newImg,[box],0,(0,0,255),2)
 
+    # tests if the  shape is rotated, only for rectangles does this value get used
+    if (cv2.contourArea(box) * 1.2) < (width * height):
+        rotated = True
+        print("It is a rotated shape")
+    else:
+        rotated = False
+        print("It is not a rotated shape")
+
+    # shows all contours
+    cv2.imshow("Bounding box and best fit comparison", newImg)
+    cv2.waitKey(0)
+
+    # returns sign type based on number of sides
     if sides == 3:
         return "yield"
     elif sides == 4:
