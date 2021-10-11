@@ -42,6 +42,20 @@ def main():
     cv2.imshow("All contours", contourImg)
     cv2.waitKey(0)
 
+    # iterates though to find the biggest contour
+    maxArea = 0
+    bestIndex = -1
+    for i in range(len(contours)):
+        if maxArea < cv2.contourArea(contours[i]):
+            maxArea = cv2.contourArea(contours[i])
+            bestIndex = i
+
+    # Draws the biggest contour over the original image
+    newImg = image.copy()
+    cv2.drawContours(newImg, contours, bestIndex, (0,0,255), 3)
+    cv2.imshow("Correct contour", newImg)
+    cv2.waitKey(0)
+
 
 
 main()
