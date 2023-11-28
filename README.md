@@ -6,6 +6,4 @@ It then test if the shape is rotated or not by comparing the bounding box (un-ro
 (a box that encloss the shape with the actual minimum area, rotated or not). This part only is put into use for rectangles. Finally, it returns the type of sign and a histogram 
 containing the sign's color.
 
-IMPORTANT FOR DR. JAICLIN: While I did save version history, I forgot to update it on GitHub. As a result, all of my commits are dated for right now, but they still reflect actual versions of my project.
-
 This project is complete.
